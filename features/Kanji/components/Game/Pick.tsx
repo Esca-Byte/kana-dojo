@@ -218,7 +218,7 @@ const KanjiPickGame = ({ selectedKanjiObjs, isHidden }: KanjiPickGameProps) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [shuffledOptions.length]);
 
   useEffect(() => {
     if (isHidden) speedStopwatch.pause();
