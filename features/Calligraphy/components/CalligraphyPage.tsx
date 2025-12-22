@@ -490,7 +490,7 @@ const CalligraphyPage = () => {
       {/* Main Content */}
       <div className='flex-1 p-3 flex flex-col gap-2 max-w-6xl mx-auto w-full'>
         {/* Top: Step 2 Collapsed (Clickable to go back) */}
-        <button
+        <div
           onClick={() => setActiveStep(2)}
           className='h-11 bg-[var(--card-color)] rounded-xl flex items-center justify-between px-4 border border-[var(--border-color)] hover:border-[var(--main-color)] transition-colors'
         >
@@ -503,7 +503,7 @@ const CalligraphyPage = () => {
           <span className='text-xs text-[var(--secondary-color)]'>
             Click to change
           </span>
-        </button>
+        </div>
 
         {/* Main Area */}
         <div className='flex-1 flex gap-2'>
