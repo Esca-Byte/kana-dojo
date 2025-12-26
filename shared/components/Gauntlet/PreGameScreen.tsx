@@ -101,6 +101,11 @@ export default function PreGameScreen({
     [playClick, setDifficulty]
   );
 
+  // Shared design toggle for Difficulty and Mode selector sections:
+  // true = New design (ActionButtons with main/secondary colors and opacity)
+  // false = Old design (transparent non-selected or detailed cards)
+  const useNewSelectorDesign = true;
+
   return (
     <div className='fixed inset-0 z-[70] overflow-y-auto bg-[var(--background-color)]'>
       <div className='flex min-h-[100dvh] flex-col items-center justify-center p-4'>
@@ -137,14 +142,8 @@ export default function PreGameScreen({
 
           {/* Difficulty Selection */}
           {(() => {
-            // Switch between difficulty selector designs:
-            // 0 = Old design (simple buttons with border highlight)
-            // 1 = Card design (ActionButtons in card, transparent non-selected)
-            // 2 = UnitSelector-style (all ActionButtons with main/secondary colors and opacity)
-            const difficultySelectorDesign: 0 | 1 | 2 = 2;
-
-            if (difficultySelectorDesign === 2) {
-              // Design 2: UnitSelector-style ActionButtons (main/secondary with opacity)
+            if (useNewSelectorDesign) {
+              // New design: UnitSelector-style ActionButtons (main/secondary with opacity)
               return (
                 <div
                   className={cn(
@@ -189,55 +188,11 @@ export default function PreGameScreen({
               );
             }
 
-            if (difficultySelectorDesign === 1) {
-              // Design 1: Card design (ActionButtons in card, transparent non-selected)
-              return (
-                <div className='space-y-3'>
-                  <h3 className='text-sm text-[var(--main-color)]'>
-                    Difficulty
-                  </h3>
-                  <div className='flex w-full justify-center gap-2 rounded-3xl border-0 border-[var(--border-color)] bg-[var(--card-color)] p-2'>
-                    {(
-                      Object.entries(DIFFICULTY_CONFIG) as [
-                        GauntletDifficulty,
-                        (typeof DIFFICULTY_CONFIG)[GauntletDifficulty]
-                      ][]
-                    ).map(([key, config]) => {
-                      const isSelected = key === difficulty;
-                      return (
-                        <ActionButton
-                          key={key}
-                          onClick={() => handleDifficultyClick(key)}
-                          colorScheme={isSelected ? 'main' : undefined}
-                          borderColorScheme={isSelected ? 'main' : undefined}
-                          borderBottomThickness={isSelected ? 10 : 0}
-                          borderRadius='3xl'
-                          className={clsx(
-                            'flex-1 gap-1.5 px-4 py-2.5 text-sm',
-                            !isSelected &&
-                              'bg-transparent text-[var(--secondary-color)] hover:bg-[var(--border-color)]/50 hover:text-[var(--main-color)]'
-                          )}
-                        >
-                          {difficultyIcons[key]}
-                          <span>{config.label}</span>
-                        </ActionButton>
-                      );
-                    })}
-                  </div>
-                  <p className='text-center text-xs text-[var(--secondary-color)]'>
-                    {DIFFICULTY_CONFIG[difficulty].description}
-                  </p>
-                </div>
-              );
-            }
-
-            // Design 0: Old design (simple buttons with border highlight)
+            // Old design: Card with transparent non-selected buttons
             return (
               <div className='space-y-3'>
-                <h3 className='text-sm text-[var(--secondary-color)]'>
-                  Difficulty
-                </h3>
-                <div className='grid grid-cols-3 gap-2'>
+                <h3 className='text-sm text-[var(--main-color)]'>Difficulty</h3>
+                <div className='flex w-full justify-center gap-2 rounded-3xl border-0 border-[var(--border-color)] bg-[var(--card-color)] p-2'>
                   {(
                     Object.entries(DIFFICULTY_CONFIG) as [
                       GauntletDifficulty,
@@ -246,43 +201,26 @@ export default function PreGameScreen({
                   ).map(([key, config]) => {
                     const isSelected = key === difficulty;
                     return (
-                      <button
+                      <ActionButton
                         key={key}
                         onClick={() => handleDifficultyClick(key)}
+                        colorScheme={isSelected ? 'main' : undefined}
+                        borderColorScheme={isSelected ? 'main' : undefined}
+                        borderBottomThickness={isSelected ? 10 : 0}
+                        borderRadius='3xl'
                         className={clsx(
-                          'flex flex-col items-center gap-1 rounded-xl p-3',
-                          'transition-all duration-200',
-                          'border-2 hover:cursor-pointer',
-                          isSelected
-                            ? 'border-[var(--main-color)] bg-[var(--main-color)]/10'
-                            : 'border-[var(--border-color)] bg-[var(--card-color)] hover:border-[var(--secondary-color)]/50'
+                          'flex-1 gap-1.5 px-4 py-2.5 text-sm',
+                          !isSelected &&
+                            'bg-transparent text-[var(--secondary-color)] hover:bg-[var(--border-color)]/50 hover:text-[var(--main-color)]'
                         )}
                       >
-                        <div
-                          className={clsx(
-                            'fill-current text-xl',
-                            isSelected
-                              ? 'text-[var(--main-color)]'
-                              : 'text-[var(--muted-color)]'
-                          )}
-                        >
-                          {difficultyIcons[key]}
-                        </div>
-                        <span
-                          className={clsx(
-                            'text-xs font-medium',
-                            isSelected
-                              ? 'text-[var(--main-color)]'
-                              : 'text-[var(--secondary-color)]'
-                          )}
-                        >
-                          {config.label}
-                        </span>
-                      </button>
+                        {difficultyIcons[key]}
+                        <span>{config.label}</span>
+                      </ActionButton>
                     );
                   })}
                 </div>
-                <p className='text-center text-xs text-[var(--muted-color)]'>
+                <p className='text-center text-xs text-[var(--secondary-color)]'>
                   {DIFFICULTY_CONFIG[difficulty].description}
                 </p>
               </div>
@@ -291,13 +229,9 @@ export default function PreGameScreen({
 
           {/* Game Mode Cards */}
           {(() => {
-            // Toggle between mode selector designs:
-            // true = New design (ActionButtons with main/secondary colors and opacity)
-            // false = Old design (detailed cards with icons and radio indicators)
-            const useNewModeSelectorDesign = true;
-
-            if (useNewModeSelectorDesign) {
+            if (useNewSelectorDesign) {
               // New design: ActionButton style (matching UnitSelector/Difficulty)
+              const selectedMode = gameModes.find(m => m.id === gameMode);
               return (
                 <div
                   className={cn(
@@ -339,6 +273,9 @@ export default function PreGameScreen({
                       );
                     })}
                   </div>
+                  <p className='text-center text-xs text-[var(--secondary-color)]'>
+                    {selectedMode?.description}
+                  </p>
                 </div>
               );
             }
