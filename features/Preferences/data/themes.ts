@@ -327,7 +327,7 @@ const baseThemeSets: BaseThemeGroup[] = [
         id: 'neon-city',
         backgroundColor: 'oklch(0% 0 0 / 0.95)',
         mainColor: 'oklch(100% 0 0)',
-        secondaryColor: 'oklch(90% 0 0)',
+        secondaryColor: 'oklch(85% 0 0)',
         wallpaperId: 'neon-city-local',
       },
       {
