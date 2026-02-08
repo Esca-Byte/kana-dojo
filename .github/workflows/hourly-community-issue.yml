@@ -50,13 +50,11 @@ jobs:
           script: |
             const fs = require('fs');
             const templates = require('./.github/templates/messages.cjs');
+            const emojiBank = require('./.github/templates/emojis.cjs');
             const t = templates.issueCreation;
 
             const forceType = (context.payload.inputs && context.payload.inputs.force_type) ? String(context.payload.inputs.force_type).trim() : '';
             const dryRun = !!(context.payload.inputs && (context.payload.inputs.dry_run === true || context.payload.inputs.dry_run === 'true'));
-
-            // Use emoji bank from templates
-            const emojiBank = templates.emojiBank;
 
             function pickEmoji() {
               return emojiBank[Math.floor(Math.random() * emojiBank.length)];
